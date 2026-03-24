@@ -42,6 +42,11 @@ app.use(
 	}),
 );
 
+app.use((req, res, next) => {
+	console.log(`${req.method} ${req.path} from ${req.get("origin")}`);
+	next();
+});
+
 app.use(
 	session({
 		secret: session_secret!,
