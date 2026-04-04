@@ -11,10 +11,10 @@ class AuthController {
 		private authService: AuthService,
 		private userService: UserService,
 	) {
-
 		this.router.post("/signup", this.signup);
 		this.router.post("/login", this.login);
 		this.router.post("/logout", this.logout);
+		this.router.get("/me", this.getMe);
 
 		this.router.get("/me", (req, res) => {
 			if (req.session.authenticated) {
@@ -27,6 +27,16 @@ class AuthController {
 			}
 		});
 	}
+
+	getMe: RequestHandler = (req, res) => {
+		if (req.session && req.session.authenticated) {
+			return res.json({
+				authenticated: true,
+				userType: req.session.userType,
+			});
+		}
+		res.status(401).json({ authenticated: false });
+	};
 
 	signup: RequestHandler = async (req, res) => {
 		try {

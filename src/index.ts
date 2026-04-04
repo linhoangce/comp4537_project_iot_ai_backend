@@ -50,18 +50,19 @@ app.use((req, res, next) => {
 });
 
 app.use(
-	session({
-		secret: session_secret!,
-		resave: false,
-		saveUninitialized: false,
-		store: sessionStore,
-		cookie: {
-			maxAge: MAX_AGE,
-			httpOnly: true, // prevents XSS from reading cookie
-			secure: true,
-			sameSite: "none",
-		},
-	}),
+  session({
+    secret: session_secret!,
+    resave: false,
+    saveUninitialized: false,
+    proxy: true, // Add this to work with app.set("trust proxy", 1)
+    store: sessionStore,
+    cookie: {
+      maxAge: MAX_AGE,
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    },
+  }),
 );
 
 app.get("/health", (req, res) => {
