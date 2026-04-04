@@ -13,6 +13,7 @@ import AuthController from "./controllers/AuthControllers.js";
 import UserController from "./controllers/UserController.js";
 
 const app = express();
+app.set("trust proxy", 1); // Allow Express to trust Render's proxy
 
 const dbManager = new DatabaseManager(db_config);
 const MySQLStore = MySQLStoreFactory(session as any);
@@ -59,7 +60,6 @@ app.use(
 			httpOnly: true, // prevents XSS from reading cookie
 			secure: true,
 			sameSite: "none",
-			domain: undefined,
 		},
 	}),
 );
