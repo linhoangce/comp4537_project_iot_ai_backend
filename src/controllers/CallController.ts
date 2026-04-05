@@ -47,6 +47,7 @@ export class CallController {
 				callSid: call.sid,
 			});
 		} catch (error: any) {
+      console.log("Twilio Error: ", error.message);
 			res.status(500).json({ error: error.message });
 		}
 	};
@@ -97,6 +98,12 @@ export class CallController {
 
 			const aiReply =
 				hfResponse?.choices?.[0]?.message?.content || "Sorry, I couldn't come up with a response.";
+
+      response.say(aiReply);
+      response.gather({
+        input: ["speech"],
+        action: "/api/twilio/gather",
+      });
 
 			history.push({
 				role: "assistant",
