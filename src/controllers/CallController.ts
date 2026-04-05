@@ -90,7 +90,7 @@ export class CallController {
 
 		try {
 			const hfResponse: any = await this.hfClient.chatCompletion({
-				model: "microsoft/Phi-3.5-mini-instruct",
+				model: "meta-llama/Meta-Llama-3-8B-Instruct",
 				messages: history,
 				max_tokens: 100,
 			});
