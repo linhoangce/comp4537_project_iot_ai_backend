@@ -54,6 +54,9 @@ export class CallController {
 
 	handleVoice: RequestHandler = (req, res) => {
 		const response = new twilio.twiml.VoiceResponse();
+
+    response.pause({ length: 5 }); // Pause for 5 seconds to allow the call to connect
+
 		response.say("Hello! This is Linh's app front desk assistant. How can I help you today?");
 
 		response.gather({
