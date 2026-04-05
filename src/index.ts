@@ -89,8 +89,8 @@ const userController = new UserController(userService);
 const callController = new CallController();
 
 app.use("/auth", authController.router);
-app.use("/api", userController.router);
 app.use("/api", callController.router);
+app.use("/api", userController.router);
 
 app.listen(PORT, () => {
 	console.log("Running on port ", PORT);
