@@ -21,7 +21,8 @@ export class CallController {
 		this.router.post("/make-call", this.makeCall);
 		this.router.post("/twilio/voice", this.handleVoice);
 		this.router.post("/twilio/gather", this.handleGather);
-		this.router.post("/transcripts/:sid", this.getTranscripts);
+		this.router.get("/transcript/:sid", this.getTranscripts);
+    this.router.get("/twilio/voice", this.handleVoice);
 	}
 
 	makeCall: RequestHandler = async (req, res) => {

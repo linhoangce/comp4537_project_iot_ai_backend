@@ -31,6 +31,7 @@ const MAX_AGE = 7 * 60 * 60 * 1000;
 const PORT = 3000;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 app.use(
 	cors({
