@@ -64,7 +64,7 @@ class DatabaseManager {
 		}
 	}
 
-	async insertData(tableName: string, columns: string[], values: string[]) {
+	async insertData(tableName: string, columns: string[], values: any[]) {
 		this.validateTemplateString(tableName, "table name");
 		for (var i = 0; i < columns.length; i++) {
 			this.validateTemplateString(columns[i]!, "column name");
@@ -86,6 +86,56 @@ class DatabaseManager {
 			throw error;
 		}
 	}
+
+	async selectData(tableName: string, columns: string[], conditions: Record<string, any>) {
+    this.validateTemplateString(tableName, "table name");
+    
+    const condKeys = Object.keys(conditions);
+    condKeys.forEach(k => this.validateTemplateString(k, "condition column"));
+    columns.forEach(c => this.validateTemplateString(c, "select column"));
+
+    const whereClause = condKeys.map(k => `\`${k}\` = ?`).join(" AND ");
+    const whereValues = condKeys.map(k => conditions[k]);
+
+    try {
+      const sql = `
+        SELECT ${columns.map(c => `\`${c}\``).join(", ")} 
+        FROM \`${tableName}\` 
+        ${condKeys.length > 0 ? `WHERE ${whereClause}` : ""}
+      `;
+      
+      const [rows] = await this.pool.execute(sql, whereValues);
+      return rows as any[];
+    } catch (error: any) {
+      console.error(`Error selecting from ${tableName}: ${error.message}`);
+      throw error;
+    }
+  }
+
+  async incrementData(tableName: string, incrementColumn: string, conditions: Record<string, any>, amount = 1) {
+    this.validateTemplateString(tableName, "table name");
+    this.validateTemplateString(incrementColumn, "increment column");
+    
+    const condKeys = Object.keys(conditions);
+    condKeys.forEach(k => this.validateTemplateString(k, "condition column"));
+
+    const whereClause = condKeys.map(k => `\`${k}\` = ?`).join(" AND ");
+    const whereValues = condKeys.map(k => conditions[k]);
+
+    try {
+      const sql = `
+        UPDATE \`${tableName}\` 
+        SET \`${incrementColumn}\` = \`${incrementColumn}\` + ? 
+        WHERE ${whereClause}
+      `;
+      
+      const [rows] = await this.pool.execute(sql, [amount, ...whereValues]);
+      return rows;
+    } catch (error: any) {
+      console.error(`Error incrementing ${incrementColumn} in ${tableName}: ${error.message}`);
+      throw error;
+    }
+  }
 
 	async shutdown() {
 		await this.pool.end();
