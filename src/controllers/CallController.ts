@@ -27,7 +27,7 @@ export class CallController {
 
 	makeCall: RequestHandler = async (req, res) => {
 		const { phoneNumber } = req.body;
-		const userId = (req.session as any).userId;
+		const userId = req.session.userId;
 
 		if (!userId) {
 			return res.status(401).json({ error: "Unauthorized" });
@@ -164,9 +164,9 @@ export class CallController {
 	};
 
 	getTranscripts: RequestHandler = async (req, res) => {
-		const session = await this.callService.getCallSession(req.params.sid as string || "");
-		session 
-		? res.json({ history: session.history }) 
-		: res.status(404).json({ error: "Not found!" });
+		const session = await this.callService.getCallSession((req.params.sid as string) || "");
+		session
+			? res.json({ history: session.history })
+			: res.status(404).json({ error: "Not found!" });
 	};
 }

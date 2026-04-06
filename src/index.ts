@@ -18,12 +18,6 @@ import { InferenceClient } from "@huggingface/inference";
 const app = express();
 app.set("trust proxy", 1); // Allow Express to trust Render's proxy
 
-// Temporary in-memory database to store call transcripts
-const activeCalls = new Map<string, { role: "user" | "assistant" | "system"; content: string }[]>();
-
-const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_TOKEN!);
-const client = new InferenceClient(process.env.HF_API_TOKEN!);
-
 const MySQLStore = MySQLStoreFactory(session as any);
 const sessionStore = new MySQLStore({}, dbManager.getRawPool());
 const MAX_AGE = 7 * 60 * 60 * 1000;

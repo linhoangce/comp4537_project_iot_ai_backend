@@ -11,11 +11,9 @@ class AuthController {
 		private authService: AuthService,
 		private userService: UserService,
 	) {
-
 		this.router.post("/signup", this.signup);
 		this.router.post("/login", this.login);
 		this.router.post("/logout", this.logout);
-		
 
 		this.router.get("/me", (req, res) => {
 			if (req.session.authenticated) {
@@ -81,6 +79,7 @@ class AuthController {
 			req.session.authenticated = true;
 			req.session.email = user.email;
 			req.session.userType = user.userType;
+			req.session.userId = user.id;
 
 			// 2. FORCE SAVE before responding
 			req.session.save((err) => {
