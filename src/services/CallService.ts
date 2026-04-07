@@ -121,4 +121,31 @@ export class CallService {
 			throw error;
 		}
 	}
+
+	/**
+	 * Retrieves a summary of all users and their call activity for the admin.
+	 */
+	async getAllUserUsage(): Promise<any[]> {
+		try {
+			// Joins users table and user_calls table to get names and totals
+			const sql = `
+				SELECT
+					u.id,
+					u.name,
+					u.email,
+					SUM(uc.call_count) as total_calls,
+					MAX(uc.call_date) as last_call_date
+				FROM users u
+				LEFT JOIN user_calls ic ON u.id = uc.user_id
+				GROUP BY u.id
+			`;
+			const [rows] = await this.db.getPool().execute(sql);
+			return rows as any[];
+		} catch (error: any) {
+			console.error("Error fetching user usage summary:", error.message);
+			throw error;
+		}
+	}
 }
+
+

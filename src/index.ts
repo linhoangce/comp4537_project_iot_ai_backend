@@ -14,6 +14,8 @@ import UserController from "./controllers/UserController.js";
 import { CallController } from "./controllers/CallController.js";
 import twilio from "twilio";
 import { InferenceClient } from "@huggingface/inference";
+import { AdminController } from "./controllers/AdminController.js";
+import { CallService } from "./services/CallService.js";
 
 const app = express();
 app.set("trust proxy", 1); // Allow Express to trust Render's proxy
@@ -75,15 +77,18 @@ app.get("/health", (req, res) => {
 // services
 const userService = new UserService(dbManager);
 const authService = new AuthService(userService);
+const callService = new CallService(dbManager);
 
 // controllers
 const authController = new AuthController(authService, userService);
 const userController = new UserController(userService);
 const callController = new CallController();
+const adminController = new AdminController(callService);
 
 app.use("/auth", authController.router);
 app.use("/api", callController.router);
 app.use("/api", userController.router);
+app.use("/admin", adminController.router);
 
 app.listen(PORT, () => {
 	console.log("Running on port ", PORT);
