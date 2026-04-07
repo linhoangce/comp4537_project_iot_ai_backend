@@ -5,15 +5,12 @@ import session from "express-session";
 import MySQLStoreFactory from "express-mysql-session";
 import cors from "cors";
 
-import { db_config, session_secret, secure, dbManager } from "./utils/utils.js";
-import DatabaseManager from "./lib/DatabaseManager.js";
+import { session_secret, dbManager } from "./utils/utils.js";
 import { UserService } from "./services/UserService.js";
 import { AuthService } from "./services/AuthService.js";
 import AuthController from "./controllers/AuthControllers.js";
 import UserController from "./controllers/UserController.js";
 import { CallController } from "./controllers/CallController.js";
-import twilio from "twilio";
-import { InferenceClient } from "@huggingface/inference";
 import { AdminController } from "./controllers/AdminController.js";
 import { CallService } from "./services/CallService.js";
 
