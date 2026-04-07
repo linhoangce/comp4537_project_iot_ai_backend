@@ -136,7 +136,7 @@ export class CallService {
 					SUM(uc.call_count) as total_calls,
 					MAX(uc.call_date) as last_call_date
 				FROM users u
-				LEFT JOIN user_calls ic ON u.id = uc.user_id
+				LEFT JOIN user_calls uc ON u.id = uc.user_id
 				GROUP BY u.id
 			`;
 			const [rows] = await this.db.getPool().execute(sql);
