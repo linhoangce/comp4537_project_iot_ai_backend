@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import fs from "fs";
+import DatabaseManager from "../lib/DatabaseManager.js";
 
 // Load environment variables
 dotenv.config();
@@ -13,6 +14,8 @@ export const db_config = {
     ca: fs.readFileSync("./DigiCertGlobalRootG2.crt.pem")
   }
 };
+
+export const dbManager = new DatabaseManager(db_config);
 
 export const session_secret = process.env.NODE_SESSION_SECRET;
 export const secure = process.env.NODE_ENV;

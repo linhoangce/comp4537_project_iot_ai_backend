@@ -5,7 +5,7 @@ import session from "express-session";
 import MySQLStoreFactory from "express-mysql-session";
 import cors from "cors";
 
-import { db_config, session_secret, secure } from "./utils/utils.js";
+import { db_config, session_secret, secure, dbManager } from "./utils/utils.js";
 import DatabaseManager from "./lib/DatabaseManager.js";
 import { UserService } from "./services/UserService.js";
 import { AuthService } from "./services/AuthService.js";
@@ -18,13 +18,6 @@ import { InferenceClient } from "@huggingface/inference";
 const app = express();
 app.set("trust proxy", 1); // Allow Express to trust Render's proxy
 
-// Temporary in-memory database to store call transcripts
-const activeCalls = new Map<string, { role: "user" | "assistant" | "system"; content: string }[]>();
-
-const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_TOKEN!);
-const client = new InferenceClient(process.env.HF_API_TOKEN!);
-
-const dbManager = new DatabaseManager(db_config);
 const MySQLStore = MySQLStoreFactory(session as any);
 const sessionStore = new MySQLStore({}, dbManager.getRawPool());
 const MAX_AGE = 7 * 60 * 60 * 1000;
